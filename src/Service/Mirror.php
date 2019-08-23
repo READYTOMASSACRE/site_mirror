@@ -33,6 +33,8 @@ class Mirror
 
         if ($request->getContent()) $opts['body'] = $request->getContent();
 
+        if (isset($opts['body'])) $url .= '?' . $opts['body'];
+
         $response = $this->client->request($request->getMethod(), $url, $opts);
 
         return new MirrorResponse($response, $this->domain, $url);

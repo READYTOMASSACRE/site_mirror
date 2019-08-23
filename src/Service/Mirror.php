@@ -31,9 +31,10 @@ class Mirror
         unset($opts['headers']['content-type']);
         unset($opts['headers']['content-length']);
 
-        if ($request->getContent()) $opts['body'] = $request->getContent();
-
-        if (isset($opts['body'])) $url .= '?' . $opts['body'];
+        if ($request->getMethod() === 'GET') {
+            $body = $request->query->all();
+            if (!empty($body)) $url .= '?' . http_build_query($body);
+        }
 
         $response = $this->client->request($request->getMethod(), $url, $opts);
 

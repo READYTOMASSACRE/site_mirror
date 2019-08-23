@@ -4,6 +4,7 @@ namespace App\Util;
 
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\HttpFoundation\Cookie;
+use App\Util\Content\HousePlans;
 
 class MirrorResponse
 {
@@ -12,9 +13,10 @@ class MirrorResponse
     protected $content;
     protected $domain;
 
-    public function __construct(ResponseInterface $response, string $domain)
+    public function __construct(ResponseInterface $response, string $domain, string $url)
     {
         $this->domain = $domain;
+        $this->url = $url;
         $this->setHeaders($response);
         $this->setContent($response);
         $this->setStatusCode($response);
@@ -49,6 +51,23 @@ class MirrorResponse
     public function setContent(ResponseInterface $response) : self
     {
         $this->content = (string) $response->getBody();
+
+        $headers = $this->getHeaders();
+
+        if (
+            isset($headers['content-type'])
+            && strpos(current($headers['content-type']), 'text/html') !== false
+        ) {
+            $contentParser = null;
+
+            switch ($this->domain) {
+                case 'https://www.houseplans.com/':
+                    $contentParser = new HousePlans($this->content);
+                    break;
+            }
+
+            if ($contentParser) $this->content = $contentParser->getContent();
+        }
 
         return $this;
     }

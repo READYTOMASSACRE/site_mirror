@@ -35,6 +35,6 @@ class Mirror
 
         $response = $this->client->request($request->getMethod(), $url, $opts);
 
-        return new MirrorResponse($response, $this->domain);
+        return new MirrorResponse($response, $this->domain, $url);
     }
 }

@@ -100,7 +100,7 @@ HTML;
             }
         }
 
-        $xpathQuery = "//a[contains(@href, '1-800-913-2350')]|//div[@class='text-center text-xl bg-white mb-5 py-8']|//img[contains(@src, 'banner')]|//a[contains(@href, '1‑888‑705‑1300')]|//div[@class='w-full text-center border border-nav-menu-light mb-4 p-4 max-w-xl mx-auto']";
+        $xpathQuery = "//div[contains(@id, 'div-gpt-ad-box2-300x250')]|//div[contains(@id, 'div-gpt-ad-leaderboard2-728x90')]|//div[contains(@id, 'div-gpt-ad-box1-300x250')]|//a[contains(@href, '1-800-913-2350')]|//div[@class='text-center text-xl bg-white mb-5 py-8']|//img[contains(@src, 'banner')]|//a[contains(@href, '1‑888‑705‑1300')]|//div[@class='w-full text-center border border-nav-menu-light mb-4 p-4 max-w-xl mx-auto']";
         $result = $xpath->query($xpathQuery);
 
         foreach ($result as $item) {

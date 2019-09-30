@@ -27,13 +27,13 @@ class Mirror
             'allow_redirects' => false,
         ];
 
-        unset($opts['headers']['host']);
-        unset($opts['headers']['content-type']);
-        unset($opts['headers']['content-length']);
+        unset($opts['headers']['host'], $opts['headers']['content-type'], $opts['headers']['content-length']);
 
         if ($request->getMethod() === 'GET') {
             $body = $request->query->all();
-            if (!empty($body)) $url .= '?' . http_build_query($body);
+            if (!empty($body)) {
+                $url .= '?' . http_build_query($body);
+            }
         }
 
         $response = $this->client->request($request->getMethod(), $url, $opts);

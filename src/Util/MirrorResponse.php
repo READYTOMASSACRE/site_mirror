@@ -5,6 +5,7 @@ namespace App\Util;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\HttpFoundation\Cookie;
 use App\Util\Content\HousePlans;
+use function preg_replace;
 
 class MirrorResponse
 {
@@ -28,8 +29,7 @@ class MirrorResponse
 
         $headers = array_change_key_case($headers);
 
-        unset($headers['transfer-encoding']);
-        unset($headers['eontent-encoding']);
+        unset($headers['transfer-encoding'], $headers['eontent-encoding']);
 
         if (isset($headers['location'])) {
             $headers['location'] = array_map(function ($item) {
@@ -39,7 +39,7 @@ class MirrorResponse
 
         if (isset($headers['set-cookie'])) {
             foreach ($headers['set-cookie'] as $index => $cookie) {
-                $headers['set-cookie'][$index] = \preg_replace('/ domain\=([A-Za-z\.0-9-]+);?/i', '', $cookie);
+                $headers['set-cookie'][$index] = preg_replace('/ domain=([A-Za-z.0-9-]+);?/i', '', $cookie);
             }
         }
 
@@ -66,7 +66,9 @@ class MirrorResponse
                     break;
             }
 
-            if ($contentParser) $this->content = $contentParser->getContent();
+            if ($contentParser) {
+                $this->content = $contentParser->getContent();
+            }
         }
 
         return $this;

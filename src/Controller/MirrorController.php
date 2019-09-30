@@ -12,8 +12,12 @@ class MirrorController extends AbstractController
 {
     /**
      * @Route("/{url}", name="app_mirror", requirements={"url": ".*"})
+     * @param $url
+     * @param Request $request
+     * @param Mirror $mirror
+     * @return Response
      */
-    public function mirror($url, Request $request, Mirror $mirror)
+    public function mirror($url, Request $request, Mirror $mirror): Response
     {
         $response = $mirror->getResponse($request, $url);
 

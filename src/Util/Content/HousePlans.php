@@ -2,6 +2,8 @@
 
 namespace App\Util\Content;
 
+use DOMXPath;
+use IvoPetkov\HTML5DOMDocument;
 use Symfony\Component\DomCrawler\Crawler;
 use DOMWrap\Document;
 
@@ -17,13 +19,13 @@ class HousePlans
     public function getContent() : string
     {
         $this->content = preg_replace(
-          '/<!--  Begin Implement Header Bidding -->(.*)<!--  End Implement Header Bidding -->/si',
+          '/<!-- {2}Begin Implement Header Bidding -->(.*)<!-- {2}End Implement Header Bidding -->->/si',
           '',
           $this->content
         );
-        $dom = new \IvoPetkov\HTML5DOMDocument();
-        $dom->loadHTML($this->content, \IvoPetkov\HTML5DOMDocument::ALLOW_DUPLICATE_IDS);
-        $js = 
+        $dom = new HTML5DOMDocument();
+        $dom->loadHTML($this->content, HTML5DOMDocument::ALLOW_DUPLICATE_IDS);
+        $js =
           '<script type="text/javascript" >
           (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
           m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
@@ -86,11 +88,8 @@ HTML;
         $dom->insertHTML($js);
         $dom->insertHTML($jsBidding);
 
-        $xpath = new \DOMXPath($dom);
-
-
         $filters = $this->getXpathFilters();
-        $xpath = new \DOMXPath($dom);
+        $xpath = new DOMXPath($dom);
 
         foreach ($filters as $reachGoal => $query) {
             $result = $xpath->query($query);
@@ -112,7 +111,7 @@ HTML;
         return $dom->saveHTML();
     }
 
-    protected function getXpathFilters()
+    protected function getXpathFilters(): array
     {
         return [
             'Search_plans_button'       => "//input[@type='submit'][@value='Search Plans']",
